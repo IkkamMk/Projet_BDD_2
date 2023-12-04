@@ -31,7 +31,7 @@ public class EnteteGeneralCustom extends Div {
         Tabs tabs = new Tabs(MenuMachine, MenuOperation, MenuTypeOperation, MenuRealise, MenuProduit, MenuPrecedence, Disconnect);
         tabs.addThemeVariants(TabsVariant.LUMO_EQUAL_WIDTH_TABS);
         
-        /*
+        
         tabs.addSelectedChangeListener(event -> {
             Tab selectedTab = tabs.getSelectedTab();
             if (selectedTab == MenuMachine) {
@@ -52,7 +52,7 @@ public class EnteteGeneralCustom extends Div {
         
             }
         });
-        */
+        
         add(tabs);
     }
 

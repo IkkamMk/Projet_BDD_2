@@ -7,9 +7,13 @@ package vue;
 import vue.Tableau.MachineGrid;
 import com.mycompany.projet_m3.Gestion;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.dnd.DragSource;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import fr.insa.MG.testVaadin.vuePrincipale;
@@ -95,7 +99,7 @@ public class MenuMachine extends MyVerticalLayout {
         }
 
     }
-
+    /*
     public void ListeMachine() {
         Connection con = this.main.getSessionInfo().getConBdD();
         
@@ -110,5 +114,43 @@ public class MenuMachine extends MyVerticalLayout {
         } catch (SQLException ex) {
             Notification.show("Erreur liste machine");
         }
+    }*/
+    public void ListeMachine() {
+        Connection con = this.main.getSessionInfo().getConBdD();
+
+        try {
+            List<machine> datas = machine.toutesLesMachines(con);
+            Button effacerTableau = new Button("Effacer le tableau");
+            effacerTableau.addClickListener((event) -> {
+                this.main.setMainContent(new MenuMachine(this.main));
+            });
+
+            VerticalLayout machinesLayout = new VerticalLayout();
+
+            for (machine mach : datas) {
+                Dialog machineDialog = new Dialog();
+                machineDialog.setWidth("300px");
+                machineDialog.setHeight("200px");
+                machineDialog.add(new H3("Machine: " + mach.getRef()));
+                machineDialog.add(new Paragraph("Description: " + mach.getDes()));
+
+                // Créer un bouton pour chaque machine avec le nom ou la référence
+                Button machineButton = new Button(mach.getRef());
+                machineButton.getElement().setAttribute("draggable", "true");
+                machineButton.addClickListener(e -> machineDialog.open());
+
+                // Définir l'élément comme étant draggable
+                DragSource<Button> dragSource = DragSource.create(machineButton);
+                dragSource.setDragData(mach);
+
+                machinesLayout.add(machineButton);
+            }
+
+            this.add(effacerTableau, machinesLayout);
+
+        } catch (SQLException ex) {
+            Notification.show("Erreur liste machine");
     }
+}
+
 }
