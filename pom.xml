@@ -4,8 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
     <!-- Project from https://start.vaadin.com/ -->
     <groupId>fr.insa.MG</groupId>
-    <artifactId>projet_m3</artifactId>
-    <name>Projet m3</name>
+    <artifactId>Projet_m3_DDA</artifactId>
+    <name>Projet_m3_DDA</name>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
