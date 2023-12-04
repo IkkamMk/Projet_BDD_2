@@ -8,26 +8,27 @@ import com.mycompany.projet_m3.Gestion;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import java.sql.SQLException;
-import vue.EnteteGeneral;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
+import vue.EnteteGeneralCustom;
 import vue.MenuMachine;
-import vue.MyHorizontalLayout;
 import vue.MyVerticalLayout;
+import java.sql.SQLException;
+import com.mycompany.projet_m3.Gestion;
 
 @Route("")
 @PageTitle("Projet M3")
-
 public class vuePrincipale extends MyVerticalLayout {
-    
 
     public SessionInfo sessionInfo;
-
-    private MyHorizontalLayout entete;
+    private Div entete_custom;
     private MyVerticalLayout mainContent;
 
     public void setEntete(Component c) {
-        this.entete.removeAll();
-        this.entete.add(c);
+        this.entete_custom.removeAll();
+        this.entete_custom.add(c);
     }
 
     public void setMainContent(Component c) {
@@ -35,44 +36,37 @@ public class vuePrincipale extends MyVerticalLayout {
         this.mainContent.add(c);
     }
 
-    public MyHorizontalLayout getEntete() {
-        return entete;
+    public Div getEnteteCustom() {
+        return entete_custom;
     }
 
     public MyVerticalLayout getMainContent() {
         return mainContent;
     }
-    
-    
 
     public vuePrincipale() {
         this.sessionInfo = new SessionInfo();
-        this.entete = new MyHorizontalLayout();
-        this.entete.setWidthFull();
-        this.add(this.entete);
+
+        this.entete_custom = new Div();
+        this.entete_custom.setWidthFull();
+        this.add(this.entete_custom);
 
         this.mainContent = new MyVerticalLayout();
         this.mainContent.setWidthFull();
         this.mainContent.setHeightFull();
         this.add(this.mainContent);
-        
-        
+
         try {
             this.sessionInfo.setConBdD(Gestion.connectSurServeurM3());
-            this.setEntete(new EnteteGeneral(this));
+            this.setEntete(new EnteteGeneralCustom()); // Remplacer l'ancien entête par EnteteGeneralCustom
             this.setMainContent(new MenuMachine(this));
         } catch (SQLException ex) {
+            // Gérer l'exception
             //this.setMainContent(new BdDNonAccessible(this));
         }
-
     }
 
-    
-    /**
-     * @return the sessionInfo
-     */
     public SessionInfo getSessionInfo() {
         return sessionInfo;
     }
-
 }
