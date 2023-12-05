@@ -133,12 +133,12 @@ public class MenuMachine extends MyVerticalLayout {
                 machineDialog.setHeight("200px");
                 machineDialog.add(new H3("Machine: " + mach.getRef()));
                 machineDialog.add(new Paragraph("Description: " + mach.getDes()));
-
+                machineDialog.setDraggable(true);
                 // Créer un bouton pour chaque machine avec le nom ou la référence
                 Button machineButton = new Button(mach.getRef());
                 machineButton.getElement().setAttribute("draggable", "true");
                 machineButton.addClickListener(e -> machineDialog.open());
-
+                
                 // Définir l'élément comme étant draggable
                 DragSource<Button> dragSource = DragSource.create(machineButton);
                 dragSource.setDragData(mach);
