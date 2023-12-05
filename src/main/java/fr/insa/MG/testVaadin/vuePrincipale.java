@@ -58,7 +58,7 @@ public class vuePrincipale extends MyVerticalLayout {
 
         try {
             this.sessionInfo.setConBdD(Gestion.connectSurServeurM3());
-            this.setEntete(new EnteteGeneralCustom()); // Remplacer l'ancien entête par EnteteGeneralCustom
+            this.setEntete(new EnteteGeneralCustom(this)); // Remplacer l'ancien entête par EnteteGeneralCustom
             this.setMainContent(new MenuMachine(this));
         } catch (SQLException ex) {
             // Gérer l'exception
