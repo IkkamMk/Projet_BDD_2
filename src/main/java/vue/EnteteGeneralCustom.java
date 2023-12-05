@@ -24,6 +24,7 @@ import fr.insa.MG.testVaadin.vuePrincipale;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import objet.Produit;
 import objet.machine;
 /**
  *
@@ -38,22 +39,27 @@ public class EnteteGeneralCustom extends Div {
     private int nbrProduits;
     private int nbrOperateurs;
     
+    private Tab MenuMachine;
+    private Tab MenuProduit;
+    private Tab MenuOperateur;
+    private Tab Disconnect;
+    private Tabs tabs;
 
     public EnteteGeneralCustom(vuePrincipale main) {
         this.main = main;
         //Connection con = this.main.getSessionInfo().getConBdD();
         
         this.MaJ_Badges();
-        Tab MenuMachine = new Tab(VaadinIcon.USER.create(), new Span("Machines"), createBadge(nbrMachines)); //machine.toutesLesMachines(this.main.getSessionInfo().getConBdD()).size())
+        MenuMachine = new Tab(VaadinIcon.USER.create(), new Span("Machines"), createBadge(nbrMachines)); //machine.toutesLesMachines(this.main.getSessionInfo().getConBdD()).size())
         //Tab MenuOperation = new Tab(VaadinIcon.COG.create(), new Span("Menu Operation"), createBadge(439));
         //Tab MenuTypeOperation = new Tab(VaadinIcon.USER.create(), new Span("Menu Type Operation"), createBadge(24));
         //Tab MenuRealise = new Tab(VaadinIcon.USER.create(), new Span("Menu Realise"), createBadge(24));
-        Tab MenuProduit = new Tab(VaadinIcon.USER.create(), new Span("Produits"), createBadge(24));
-        Tab MenuOperateur = new Tab(VaadinIcon.USER.create(), new Span("Opérateurs"), createBadge(24));
+        MenuProduit = new Tab(VaadinIcon.USER.create(), new Span("Produits"), createBadge(24));
+        MenuOperateur = new Tab(VaadinIcon.USER.create(), new Span("Opérateurs"), createBadge(24));
         //Tab MenuPrecedence = new Tab(VaadinIcon.USER.create(), new Span("Menu Precedence"), createBadge(24));
-        Tab Disconnect = new Tab(new Span("Se déconnecter"), createBadge(5));
+        Disconnect = new Tab(new Span("Se déconnecter"), createBadge(5));
 
-        Tabs tabs = new Tabs(MenuMachine, MenuProduit, MenuOperateur, Disconnect);
+        tabs = new Tabs(MenuMachine, MenuProduit, MenuOperateur, Disconnect);
         tabs.addThemeVariants(TabsVariant.LUMO_EQUAL_WIDTH_TABS);
         
         
@@ -62,7 +68,7 @@ public class EnteteGeneralCustom extends Div {
             if (selectedTab == MenuMachine) {
                 System.out.println("Tab 1 selected");
                 this.main.setMainContent(new MenuMachine(this.main));
-                this.MaJ_Badges();
+                //this.MaJ_Badges();
                 // Votre logique pour le Tab 1
             } /*else if (selectedTab == MenuOperation) {
                 System.out.println("Tab 2 selected");
@@ -79,7 +85,7 @@ public class EnteteGeneralCustom extends Div {
                 // Votre logique pour le Tab 2
             }*/ else if (selectedTab == MenuProduit) {
                 System.out.println("Tab 2 selected");
-                //this.main.setMainContent(new MenuProduit(this.main));
+                this.main.setMainContent(new MenuProduit(this.main));
                 this.MaJ_Badges();
                 // Votre logique pour le Tab 2
         
@@ -115,8 +121,28 @@ public class EnteteGeneralCustom extends Div {
 
         try {
             nbrMachines = machine.toutesLesMachines(con).size();
+            
+            // Créez un nouvel onglet avec le nouveau libellé et badge
+            Tab newMenuMachine = new Tab(VaadinIcon.USER.create(), new Span("Machines"), createBadge(nbrMachines));
+            /*
+            //this.MenuMachine.getElement().removeAllChildren();
+            Tabs tabs = (Tabs) getParent();
+            tabs.replace(MenuMachine, newMenuMachine);
+
+            // Mettre à jour la référence vers le nouvel onglet
+            MenuMachine = newMenuMachine;*/
+            /*
+            // Remplace l'ancien onglet par le nouvel onglet dans les Tabs
+            tabs.replace(MenuMachine, newMenuMachine);
+
+            // Mettre à jour la référence vers le nouvel onglet
+            this.MenuMachine = newMenuMachine;
+            */
+            //MenuMachine.setLabel(new Span("Machines"), createBadge(nbrMachines));
             //nbrOperateurs = operateur.tousLesOperateurs(con).size();
-            //nbrMachines = machine.toutesLesProduits(con).size();
+            //MenuOperateur.setLabel(new Span("Operateur"), createBadge(nbrOperateurs));
+            nbrProduits = Produit.tousLesProduits(con).size();
+            //MenuProduit.setLabel(new Span("Produit"), createBadge(nbrProduits));
 
 
         } catch (SQLException ex) {

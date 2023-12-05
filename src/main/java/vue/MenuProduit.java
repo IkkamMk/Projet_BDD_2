@@ -9,6 +9,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.dnd.DragSource;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -24,6 +25,7 @@ import objet.machine;
  * @author gille
  */
 public class MenuProduit extends MyVerticalLayout{
+
    private vuePrincipale main;
 
     private Button creerProduit;
@@ -95,7 +97,7 @@ public class MenuProduit extends MyVerticalLayout{
         Connection con = this.main.getSessionInfo().getConBdD();
 
         try {
-            List<Produit> datas = Produit.toutLesProduits(con);
+            List<Produit> datas = Produit.tousLesProduits(con);
             Button effacerTableau = new Button("Effacer le tableau");
             effacerTableau.addClickListener((event) -> {
                 this.main.setMainContent(new MenuProduit(this.main));

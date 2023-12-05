@@ -12,6 +12,7 @@ import com.vaadin.flow.component.dnd.DragSource;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
@@ -28,6 +29,7 @@ import objet.machine;
  * @author gille
  */
 public class MenuMachine extends MyVerticalLayout {
+
 
     private vuePrincipale main;
 

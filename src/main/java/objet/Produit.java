@@ -62,7 +62,7 @@ public class Produit {
     public String toString() {
         return "Produit{" + "id= " + getId() + ", ref= " + getRef() + ", des= " + getDes() + '}';
     }
-    public static List<Produit> toutLesProduits(Connection conn) throws SQLException {
+    public static List<Produit> tousLesProduits(Connection conn) throws SQLException {
         List<Produit> res = new ArrayList<>();
         try (PreparedStatement pst = conn.prepareStatement(
                 "select * from produit")) {
@@ -77,6 +77,9 @@ public class Produit {
         }
         return res;
     }
+    
+    
+    
     public static void deleteProduitRef(Connection conn,String ref)throws SQLException{
         try (PreparedStatement st = conn.prepareStatement(
                 "DELETE FROM `produit` WHERE ref like ?")){
