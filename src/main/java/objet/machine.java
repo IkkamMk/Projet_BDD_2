@@ -22,6 +22,16 @@ public class machine {
     private String ref;
     private String des;
     private int puissance;
+    private int X;
+    private int Y;
+
+    public machine(String ref, String des, int puissance, int X, int Y) {
+        this.ref = ref;
+        this.des = des;
+        this.puissance = puissance;
+        this.X = X;
+        this.Y = Y;
+    }
 
     public machine( String ref, String des, int puissance) {
         this.id = 0;
@@ -61,6 +71,22 @@ public class machine {
     }
     public void setPuissance(int puissance) {
         this.puissance = puissance;
+    }
+
+    public int getX() {
+        return X;
+    }
+
+    public void setX(int X) {
+        this.X = X;
+    }
+
+    public int getY() {
+        return Y;
+    }
+
+    public void setY(int Y) {
+        this.Y = Y;
     }
     
     @Override

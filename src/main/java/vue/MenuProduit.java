@@ -61,7 +61,7 @@ public class MenuProduit extends MyVerticalLayout{
             
             this.ListeProduit();
         });
-        Notification.show("Menu machine cliqué");
+        Notification.show("Menu Produit cliqué");
     }
  public void DeleteProduitRef() {
         Connection con = this.main.getSessionInfo().getConBdD();

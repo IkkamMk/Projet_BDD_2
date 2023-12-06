@@ -17,6 +17,7 @@ import vue.MenuMachine;
 import vue.MyVerticalLayout;
 import java.sql.SQLException;
 import com.mycompany.projet_m3.Gestion;
+import vue.MenuOperation;
 
 @Route("")
 @PageTitle("Projet M3")
