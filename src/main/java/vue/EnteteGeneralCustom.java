@@ -85,7 +85,7 @@ public class EnteteGeneralCustom extends Div {
                 // Votre logique pour le Tab 2
             }*/ else if (selectedTab == MenuProduit) {
                 System.out.println("Tab 2 selected");
-                //this.main.setMainContent(new MenuProduit(this.main));
+                this.main.setMainContent(new MenuProduit(this.main));
                 this.MaJ_Badges();
                 // Votre logique pour le Tab 2
         

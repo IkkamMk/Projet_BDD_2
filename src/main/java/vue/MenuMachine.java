@@ -12,12 +12,14 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.dnd.DragSource;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Page;
@@ -54,13 +56,17 @@ public class MenuMachine extends MyVerticalLayout {
     private TextField Des;
     private IntegerField Puissance;
 
+    private Div zoneMachines;
     private Button ListerMachine;
 
     public MenuMachine(vuePrincipale main) {
         this.main = main;
-        
-        
-        
+        //this.DeleteMachine(); //A n'executer qu'1 fois !!!!!!!!!
+            
+        this.setSizeFull(); // Ajuste la taille pour occuper tout l'espace disponible
+        this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Centre horizontalement
+        this.setAlignItems(FlexComponent.Alignment.CENTER); // Centre verticalement
+
         // Création du bouton pour ouvrir le Dialog
         this.CreerMachine = new Button("Creer une machine");
         
@@ -89,6 +95,7 @@ public class MenuMachine extends MyVerticalLayout {
             
             this.ListeMachine();
         });*/
+        this.ZoneMachines();
         Notification.show("Menu machine cliqué");
     }
 
@@ -156,6 +163,28 @@ public class MenuMachine extends MyVerticalLayout {
         }
 
     }
+    
+    public void ZoneMachines() {
+        this.zoneMachines = new Div(); // La zone pour afficher les machines
+        zoneMachines.getStyle()
+                .set("border", "4px solid orange") // Style du cadre orange
+                .set("width", "100%") // Largeur à 100% de l'espace disponible
+                .set("height", "calc(100vh - 200px)") // Hauteur adaptée (par exemple 50px moins que la hauteur de la page)
+                .set("position", "relative"); // Rend la position absolue des éléments internes relative à ce conteneur
+                
+        H1 titreAtelier = new H1("Atelier");
+        titreAtelier.getStyle()
+                .set("color", "orange")
+                .set("position", "absolute") // Position absolue pour placer le titre
+                .set("top", "10px") // Décalage depuis le haut
+                .set("left", "50%")
+                .set("transform", "translateX(-50%)"); // Pour centrer horizontalement
+
+        zoneMachines.add(titreAtelier);
+        
+        this.ListeMachine();
+        add( zoneMachines);
+    }
     /*
     public void ListeMachine() {
         Connection con = this.main.getSessionInfo().getConBdD();
@@ -173,10 +202,36 @@ public class MenuMachine extends MyVerticalLayout {
         }
     }*/
     public void ListeMachine() {
+        // Récupérer la liste des machines depuis la base de données (à adapter selon votre structure de données)
         Connection con = this.main.getSessionInfo().getConBdD();
+        try {
+            List<machine> machines = machine.toutesLesMachines(con);
+
+            for (machine m : machines) {
+                Div machineDiv = new Div();
+                machineDiv.setText(m.getRef()); // Vous pouvez afficher le nom de la machine ou autre chose
+
+                // Appliquez les styles de position en fonction des coordonnées de la machine
+                machineDiv.getStyle()
+                        .set("position", "absolute")
+                        .set("left", m.getX() + "px")
+                        .set("top", m.getY() + "px")
+                        .set("background", "gray") // Ajoutez d'autres styles selon vos besoins
+                        .set("padding", "10px");
+
+                // Ajoutez le Div représentant la machine au cadre "Atelier"
+                this.zoneMachines.add(machineDiv);
+            }
+        } catch (SQLException ex) {
+            Notification.show("Erreur lors de la récupération des machines depuis la base de données");
+        }
+        
+        
+        /*Connection con = this.main.getSessionInfo().getConBdD();
        
         
         try {
+            
             List<machine> datas = machine.toutesLesMachines(con);
             Button effacerTableau = new Button("Effacer le tableau");
             effacerTableau.addClickListener((event) -> {
@@ -218,7 +273,7 @@ public class MenuMachine extends MyVerticalLayout {
                 );
 
             }
-
+            */
             
             
             
@@ -280,9 +335,9 @@ public class MenuMachine extends MyVerticalLayout {
 
             this.add(effacerTableau, machinesLayout);
         */
-        } catch (SQLException ex) {
+        /*} catch (SQLException ex) {
             Notification.show("Erreur liste machine");
-    }
+    }*/
 }
 
 }

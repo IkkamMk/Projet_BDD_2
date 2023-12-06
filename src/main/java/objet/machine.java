@@ -38,6 +38,8 @@ public class machine {
         this.ref = ref;
         this.des = des;
         this.puissance = puissance;
+        this.X = 100;
+        this.Y = 500;
     }
 
     public machine(int id, String ref, String des, int puissance) {
@@ -45,6 +47,8 @@ public class machine {
         this.ref = ref;
         this.des = des;
         this.puissance = puissance;
+        this.X = 100;
+        this.Y = 800;
     }
    
     public int getId() {
@@ -96,16 +100,18 @@ public class machine {
     
     public void saveInBDD1(Connection con) throws SQLException {
         try (PreparedStatement pst = con.prepareStatement(
-                "insert into machine (ref,des,puissance) values (?,?,?)")) {
+                "insert into machine (ref,des,puissance, X, Y) values (?,?,?,?,?)")) {
             pst.setString(1, this.ref);
             pst.setString(2, this.des);
             pst.setInt(3, this.puissance);
+            pst.setInt(4, this.X); // J'ai ajouté les coordonnées X
+            pst.setInt(5, this.Y); // J'ai ajouté les coordonnées Y
             pst.executeUpdate();
         }
-        /*catch(SQLException ex){
+        catch(SQLException ex){
             System.err.println("Cette machine n'as pas été cree, verifier les donnees et reessayez");
             
-        }*/ //a rajouter si on veut pas avoir de probleme dans le menu textuel
+        } //a rajouter si on veut pas avoir de probleme dans le menu textuel
     }
     
     public static machine demande() {
