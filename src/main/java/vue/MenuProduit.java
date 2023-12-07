@@ -32,34 +32,26 @@ public class MenuProduit extends MyVerticalLayout {
     private vuePrincipale main;
 
     private Button creerProduit;
-    private Button listerProduit;
-    private Button supprimerProduitRef;
     private MyHorizontalLayout donnee;
     private TextField ref;
     private TextField des;
 
     private ComboBox<typeOperation> choixTypeOperation;
     private ComboBox<operation> opPrecedente;
-    private Button ListerMachine;
+    
 
     public MenuProduit(vuePrincipale main) {
         this.main = main;
-
+        
         this.creerProduit = new Button("Creer un produit");
-        this.listerProduit = new Button("Lister les produits");
-        this.supprimerProduitRef = new Button("Supprimer le produit avec la Reference indiqué");
-
-        this.add(this.creerProduit, this.listerProduit);
+        
+        this.add(this.creerProduit);
 
        
         this.creerProduit.addClickListener((event) -> {
             this.DialogNouveauProduit();
         });
-        this.listerProduit.addClickListener((event) -> {
-
-            //event. recuperer les coordonnées etc
-            this.ListeProduit();
-        });
+        this.ListeProduit();
         Notification.show("Menu Produit cliqué");
     }
 
@@ -186,12 +178,12 @@ public class MenuProduit extends MyVerticalLayout {
         addOperation.open();
     }
 
-    public void ListeProduit() {
+    private void ListeProduit() {
         Connection con = this.main.getSessionInfo().getConBdD();
 
         try {
             List<Produit> datas = Produit.tousLesProduits(con);
-            Button effacerTableau = new Button("Effacer le tableau");
+            Button effacerTableau = new Button("Actualiser le tableau");
             effacerTableau.addClickListener((event) -> {
                 this.main.setMainContent(new MenuProduit(this.main));
             });
