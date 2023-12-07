@@ -6,6 +6,7 @@ package vue;
 
 import vue.Tableau.MachineGrid;
 import com.mycompany.projet_m3.Gestion;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -55,7 +56,9 @@ public class MenuMachine extends MyVerticalLayout {
     private TextField Ref;
     private TextField Des;
     private IntegerField Puissance;
-
+    private IntegerField X;
+    private IntegerField Y;
+       
     private Div zoneMachines;
     private Button ListerMachine;
 
@@ -95,8 +98,9 @@ public class MenuMachine extends MyVerticalLayout {
             
             this.ListeMachine();
         });*/
+        
         this.ZoneMachines();
-        Notification.show("Menu machine cliqué");
+        Notification.show("Menu Machine cliqué");
     }
 
     public void DeleteMachine() {
@@ -119,6 +123,8 @@ public class MenuMachine extends MyVerticalLayout {
         this.Ref = new TextField("Reference de la machine");
         this.Des = new TextField("Description");
         this.Puissance = new IntegerField("Puissance");
+        this.X = new IntegerField("Coordonnée X");
+        this.Y = new IntegerField("Coordonnee Y");
 
         // Ajout des boutons pour valider ou annuler la création
         Button saveButton = new Button("Enregistrer", e -> {
@@ -127,11 +133,14 @@ public class MenuMachine extends MyVerticalLayout {
             this.NouvelleMachine();
             // Fermez le Dialog après la création de la machine
             createMachineDialog.close();
+            this.ListeMachine();
+            
         });
         Button cancelButton = new Button("Annuler", e -> createMachineDialog.close());
         
+        HorizontalLayout coord = new HorizontalLayout(this.X, this.Y);
         // Création d'un layout vertical pour organiser les composants
-        VerticalLayout textFieldLayout = new VerticalLayout(this.Ref, this.Des, this.Puissance);
+        VerticalLayout textFieldLayout = new VerticalLayout(this.Ref, this.Des, this.Puissance, coord);
         //textFieldLayout.setSpacing(true); // Ajouter de l'espacement entre les composants
         
         HorizontalLayout buttonLayout = new HorizontalLayout(saveButton, cancelButton);
@@ -147,11 +156,13 @@ public class MenuMachine extends MyVerticalLayout {
         String ref = this.Ref.getValue();
         String des = this.Des.getValue();
         int puissance = this.Puissance.getValue();
+        int X = this.X.getValue();
+        int Y = this.Y.getValue();
 
         if (!((ref.isBlank()) && (des.isBlank()))) {
             try {
                 Connection con = this.main.getSessionInfo().getConBdD();
-                machine nouveau = new machine(ref, des, puissance);
+                machine nouveau = new machine(ref, des, puissance, X, Y);
                 nouveau.saveInBDD1(con);
                 Notification.show("machine " + ref + " créé");
             } catch (SQLException ex) {
@@ -182,7 +193,7 @@ public class MenuMachine extends MyVerticalLayout {
 
         zoneMachines.add(titreAtelier);
         
-        this.ListeMachine();
+        this.ListeMachineTemp();
         add( zoneMachines);
     }
     /*
@@ -199,32 +210,101 @@ public class MenuMachine extends MyVerticalLayout {
             
         } catch (SQLException ex) {
             Notification.show("Erreur liste machine");
-        }
+        }       
     }*/
-    public void ListeMachine() {
-        // Récupérer la liste des machines depuis la base de données (à adapter selon votre structure de données)
+    
+
+    public void ListeMachineTemp() {
         Connection con = this.main.getSessionInfo().getConBdD();
-        try {
-            List<machine> machines = machine.toutesLesMachines(con);
+        
+        Dialog machineDialog = new Dialog();
+        machineDialog.setModal(true);
 
-            for (machine m : machines) {
-                Div machineDiv = new Div();
-                machineDiv.setText(m.getRef()); // Vous pouvez afficher le nom de la machine ou autre chose
+        Button boutonOuvrirMachine = new Button("Machine : " /*+ m.getRef()*/);
+        
+        boutonOuvrirMachine.getStyle().set("position", "absolute");
+        boutonOuvrirMachine.getStyle().set("left", "200px"); //min 50, max 1250
+        boutonOuvrirMachine.getStyle().set("top", "50px"); //min 50, max 
+        
+        //machineDialog.add(new Text("Test dialogue machine"));
+        machineDialog.add(
+                new H3("Machine: " /*+ m.getRef()*/),
+                new Paragraph("Description: " /*+ m.getDes()*/),
+                new Span("Puissance: " /*+ m.getPuissance()*/)
+                // Ajoutez d'autres composants pour afficher d'autres détails de la machine si nécessaire
+            );
+            
+        
+        // Ajouter un bouton dans le dialogue
+        Button boutonSupprimer = new Button("Supprimer cette machine");
+        boutonSupprimer.addClickListener(event -> {
+            Notification.show("Suppression de cette machine");
+        });
+        Button boutonDeplacer = new Button("Déplacer cette machine");
+        boutonDeplacer.addClickListener(event -> {
+            Notification.show("Veuillez clicker sur le plan pour déplacer cette machine");
+        });
+        // Conteneur pour organiser les boutons verticalement
+        HorizontalLayout boutonsLayout = new HorizontalLayout(boutonSupprimer, boutonDeplacer);
+        machineDialog.add(boutonsLayout);
+        
+        boutonOuvrirMachine.addClickListener(event -> {
+            machineDialog.open();
+        });
 
-                // Appliquez les styles de position en fonction des coordonnées de la machine
-                machineDiv.getStyle()
-                        .set("position", "absolute")
-                        .set("left", m.getX() + "px")
-                        .set("top", m.getY() + "px")
-                        .set("background", "gray") // Ajoutez d'autres styles selon vos besoins
-                        .set("padding", "10px");
+        this.zoneMachines.add(boutonOuvrirMachine);
 
-                // Ajoutez le Div représentant la machine au cadre "Atelier"
-                this.zoneMachines.add(machineDiv);
-            }
-        } catch (SQLException ex) {
-            Notification.show("Erreur lors de la récupération des machines depuis la base de données");
+    }
+    
+
+public void ListeMachine() {
+    // Récupérer la liste des machines depuis la base de données (à adapter selon votre structure de données)
+    Connection con = this.main.getSessionInfo().getConBdD();
+    try {
+        List<machine> machines = machine.toutesLesMachines(con);
+
+        for (machine m : machines) {
+            Dialog machineDialog = new Dialog();
+            machineDialog.setModal(true);
+
+            Button boutonOuvrirMachine = new Button("Machine : " + m.getRef());
+
+            boutonOuvrirMachine.getStyle().set("position", "absolute");
+            boutonOuvrirMachine.getStyle().set("left", m.getX() + "px"); //min 50, max 1250
+            boutonOuvrirMachine.getStyle().set("top", m.getY() + "px"); //min 50, max 
+
+            //machineDialog.add(new Text("Test dialogue machine"));
+            machineDialog.add(
+                    new H3("Machine: " + m.getRef()),
+                    new Paragraph("Description: " + m.getDes()),
+                    new Span("Puissance: " + m.getPuissance())
+                    // Ajoutez d'autres composants pour afficher d'autres détails de la machine si nécessaire
+                );
+
+
+            // Ajouter un bouton dans le dialogue
+            Button boutonSupprimer = new Button("Supprimer cette machine");
+            boutonSupprimer.addClickListener(event -> {
+                Notification.show("Suppression de cette machine");
+            });
+            Button boutonDeplacer = new Button("Déplacer cette machine");
+            boutonDeplacer.addClickListener(event -> {
+                Notification.show("Veuillez clicker sur le plan pour déplacer cette machine");
+            });
+            // Conteneur pour organiser les boutons verticalement
+            HorizontalLayout boutonsLayout = new HorizontalLayout(boutonSupprimer, boutonDeplacer);
+            machineDialog.add(boutonsLayout);
+
+            boutonOuvrirMachine.addClickListener(event -> {
+                machineDialog.open();
+            });
+
+            this.zoneMachines.add(boutonOuvrirMachine);
         }
+    } catch (SQLException ex) {
+        Notification.show("Erreur lors de la récupération des machines depuis la base de données");
+    }
+
         
         
         /*Connection con = this.main.getSessionInfo().getConBdD();

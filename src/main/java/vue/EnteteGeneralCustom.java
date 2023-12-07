@@ -67,7 +67,7 @@ public class EnteteGeneralCustom extends Div {
             Tab selectedTab = tabs.getSelectedTab();
             if (selectedTab == MenuMachine) {
                 System.out.println("Tab 1 selected");
-                //this.main.setMainContent(new MenuMachine(this.main));
+                this.main.setMainContent(new MenuMachine(this.main));
                 this.MaJ_Badges();
                 // Votre logique pour le Tab 1
             } /*else if (selectedTab == MenuOperation) {
