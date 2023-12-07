@@ -223,11 +223,12 @@ public class MenuProduit extends MyVerticalLayout {
                     //bouton supprimer des OPERATION
                     Button deleteOp = new Button("Supp");
                     deleteOp.addClickListener((event) -> {
-                        Notification.show("Supprimé ");
+                        
                         try {
                             operation.deleteOperationIdGraph(con, op.getId());
                             Notification.show("Operation supprimé");
                         } catch (SQLException ex) {
+                            Notification.show("Enlevé d'abord les precedence ");
                         }
 
                     });
