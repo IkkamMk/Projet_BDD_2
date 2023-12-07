@@ -77,6 +77,7 @@ public class typeOperation {
         }
         return res;
     }
+   
     public static void deleteTypeOperationId(Connection conn)throws SQLException{
         int patId = console.entreeEntier("entrez l'id du type d'operation a SUPPRIMER ");
         try (PreparedStatement st = conn.prepareStatement(

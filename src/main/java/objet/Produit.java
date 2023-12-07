@@ -19,7 +19,7 @@ import java.util.List;
 public class Produit {
     private int id;
     private String ref;
-    private String des;
+    private String des; 
 
     public int getId() {
         return id;
@@ -76,6 +76,27 @@ public class Produit {
             }
         }
         return res;
+    }
+    
+    public static int getIdProduitAvecRef(Connection conn,String ref) throws SQLException {
+        int resultat = 0;
+        try (PreparedStatement pst = conn.prepareStatement(
+                "select * from produit where ref like ?")) {
+            
+            pst.setString(1, ref);
+            try (ResultSet rs = pst.executeQuery()) {
+               while (rs.next()) {
+                    resultat = rs.getInt("id");
+                    }
+                
+            }catch(SQLException ex){
+                Notification.show("erreur getIdProduitAvecRef");
+            }
+        }catch(SQLException ex){
+                Notification.show("erreur getIdProduitAvecRef2");
+            }
+        
+        return resultat;
     }
     
     
