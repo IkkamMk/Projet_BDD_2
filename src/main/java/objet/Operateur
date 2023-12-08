@@ -1,1 +1,149 @@
+package objet;
+
+import Utils.console;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ *
+ * @author alima
+ */
+public class Operateur {
+    private String nom;
+    private String prenom;
+    private String mail;
+    private int tel;
+    
+    
+    
+    public Operateur(String nom, String prenom, String mail, int tel) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.mail = mail;
+        this.tel = tel;
+    }
+
+    public Operateur(String nom, String prenom) {
+        this.nom = nom;
+        this.prenom = prenom;
+    }
+    
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public int getTel() {
+        return tel;
+    }
+
+    public void setTel(int tel) {
+        this.tel = tel;
+    }
+    
+    
+    @Override
+    public String toString() {
+        return "Operateur{" + "Nom= " + getNom() + ", prenom= " + getPrenom() + ", mail= " + getMail() +", tel= " + getTel()+ '}';
+    }
+    
+    public static void deleteOperateur (Connection conn)throws SQLException{
+        String patRef = console.entreeString("entrez le nom de l'operateur a SUPPRIMER ");
+        try (PreparedStatement st = conn.prepareStatement(
+                "DELETE FROM `operateur` WHERE nom like ?")){
+            st.setString(1, patRef);
+            st.executeUpdate();
+            System.err.println("L'operateur "+patRef+" a ete supprimer");
+        }catch(SQLException ex){
+            System.out.println("Cet operateur n'existe probablement pas ou il y a une dependance");
+        }
+    }
+    
+    
+    public static void deleteOperateurNomGraph(Connection conn,String nom)throws SQLException{
+        try (PreparedStatement st = conn.prepareStatement(
+                "DELETE FROM `operateur` WHERE nom like ?")){
+            st.setString(1, nom);
+            st.executeUpdate();
+            System.out.println("L'operateur "+nom+" a ete supprimer");
+        }
+    }
+    
+    
+    
+    public static Operateur Creer() {
+        String nom = console.entreeString("nom : ");
+        String prenom = console.entreeString("prenom : ");
+        String mail = console.entreeString("mail");
+        int tel = console.entreeEntier("tel");
+        return new Operateur(nom, prenom, mail, tel);
+    }
+    
+    public static Operateur demande() {
+        String nom = console.entreeString("nom : ");
+        String prenom = console.entreeString("prenom : ");
+        String mail = console.entreeString("mail : ");
+        int tel = console.entreeEntier("tel");
+        return new Operateur(nom, prenom, mail, tel);
+    }
+    
+    
+    public static List<Operateur> tousLesOperateur(Connection conn) throws SQLException {
+        List<Operateur> res = new ArrayList<>();
+        try (PreparedStatement pst = conn.prepareStatement(
+                "select * from operateur")) {
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    String nom = rs.getString("nom");
+                    String prenom = rs.getString("prenom");
+                    String mail = rs.getString("mail");
+                    int tel= rs.getInt("tel");
+                    
+                    res.add(new Operateur(nom,prenom, mail,tel));
+                }
+            }
+        }
+        return res;
+    }
+
+    public void saveInBDD1(Connection con) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+                "insert into operateur (nom,prenom, mail,tel) values (?,?,?,?)")) {
+            pst.setString(1, this.nom);
+            pst.setString(2, this.prenom);
+            pst.setString(3, this.mail);
+            pst.setInt(4, this.tel);
+            pst.executeUpdate();
+            
+        }
+        catch(SQLException ex){
+            System.err.println("Cette machine n'as pas été cree, verifier les donnees et reessayez");
+            
+        } //a rajouter si on veut pas avoir de probleme dans le menu textuel
+    }
+}
 
